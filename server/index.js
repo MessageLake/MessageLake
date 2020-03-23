@@ -4,6 +4,7 @@ const app = express();
 const PORT = 3000;
 
 const serverUtils = require('./util');
+const model = require('../database/model');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,9 +30,10 @@ app.post('/signin', (req, res) => {
   res.send({ author });
 });
 
-app.post('/message', (_req, res) => {
-  console.log('Recieved a message');
-  res.redirect(301, '/lake');
+app.post('/message', (req, res) => {
+  const { message } = req.body;
+  model.saveMessage(message);
+  res.sendStatus(200);
 });
 
 app.listen(PORT, () => {
