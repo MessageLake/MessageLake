@@ -20,8 +20,9 @@ app.get('/', (_req, res) => {
   res.redirect(301, '/lake');
 });
 
-app.get('/feed', (_req, res) => {
-  serverUtils.getFeed();
+app.get('/feed', (req, res) => {
+  const { terms } = req.body;
+  model.getFeed(terms, res);
 });
 
 app.post('/signin', (req, res) => {
