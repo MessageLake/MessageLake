@@ -1,0 +1,7 @@
+Next:
+relevancy parameter in feed search
+
+
+Later:
+feeds table
+save/load feeds
