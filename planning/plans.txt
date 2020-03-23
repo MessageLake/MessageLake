@@ -1,14 +1,17 @@
 Next:
+Database / Models for persisted data
+  messages, authors, tags
+Use relevance matrix locate related messages given terms
 
-Author names are tags
-"Private" tag means only tagged author(s) can see it
 
 Later:
-Tags carry more weight, but all message text is searchable
-
-feeds table
+Author names are tags
+  "Private" tag means only tagged author(s) can see it
 save/load feeds
+  feeds table
+Tags carry more weight, but all message text is searchable
+  Tags and terms are different because the text is searchable
 
 
 Implemented:
-relevancy parameter in feed search
+relevancy parameter in feed search (frontend)
