@@ -20,6 +20,7 @@
   "homepage": "https://github.com/MessageLake/MessageLake#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "mysql": "^2.18.1"
   }
 }
