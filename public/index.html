@@ -8,12 +8,10 @@
 </head>
 <body>
   <div class="homepage">
-    <div class="instructionSection">
-      <p><em>Add messages using the </em></p>
-    </div>
     <!-- Tell the server your name -->
     <div class="signInSection">
       <h3>Sign in</h3>
+      <p><em>Tell the app your name</em></p>
       <form class="signInForm">
         <label for="author">I am:</label>
         <input type="text" name="author">
@@ -25,6 +23,7 @@
       <!-- Publish a message with tags -->
       <div class="publishSection">
         <h3>Publish Message</h3>
+        <p><em>Publish a message and give it space-separated tags</em></p>
         <form class="publishForm" action="/message" method="POST">
             <label for="content">Content</label>
             <input type="textarea" name="content">
@@ -36,6 +35,7 @@
       <!-- Search terms to generate a message feed -->
       <div class="feedSection">
         <h3>View Feed</h3>
+        <p><em>Get a list of messages related to all the terms in a space-separated list</em></p>
         <form class="feedForm">
           <label for="tags">Terms</label>
           <input type="text" name="tags">
