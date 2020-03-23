@@ -12,6 +12,11 @@ CREATE TABLE authors (
   PRIMARY KEY (id)
 );
 
+INSERT INTO authors (author) VALUES ('Jerry');
+INSERT INTO authors (author) VALUES ('Elaine');
+INSERT INTO authors (author) VALUES ('Kramer');
+INSERT INTO authors (author) VALUES ('George');
+
 CREATE TABLE messages (
   id int(11) NOT NULL AUTO_INCREMENT,
   content text NOT NULL,
