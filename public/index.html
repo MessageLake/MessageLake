@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lake</title>
+</head>
+<body>
+  <div class="homepage">
+    <!-- 1st form: publish a message with tags -->
+    <div class="publishSection">
+      <form action="/message/publish">
+        <input type="textarea" name="content">
+        <input type="text" name="tags">
+        <input type="submit" value="Publish">
+      </form>
+    </div>
+    <!-- 2nd form: search and generate a feed -->
+    <div class="feedSection">
+      <form action="/feed/view">
+        <input type="text" name="tags">
+        <input type="submit" value="View">
+      </form>
+    </div>
+  </div>
+</body>
+</html>
