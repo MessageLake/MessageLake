@@ -1,7 +1,14 @@
 Next:
-relevancy parameter in feed search
 
+Author names are tags
+"Private" tag means only tagged author(s) can see it
 
 Later:
+Tags carry more weight, but all message text is searchable
+
 feeds table
 save/load feeds
+
+
+Implemented:
+relevancy parameter in feed search
