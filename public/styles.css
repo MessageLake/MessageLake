@@ -1,4 +1,11 @@
 .homepage {
+}
+
+.loginSection {
+  margin: 10px;
+}
+
+.formSection {
   display: flex;
   justify-content: space-around;
 }
