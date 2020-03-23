@@ -4,7 +4,11 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
-const sampleFeed = path.resolve('./data/sampleFeed.json');
+
+const serverUtils = require('./util');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/', (req, _res, next) => {
   console.debug(`url=${req.url}`);
@@ -18,16 +22,13 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/feed', (_req, res) => {
-  fs.readFile(sampleFeed, (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      const errorResponse = {
-        message: 'Sorry, there was an error fetching the resource at /feed'
-      };
-      res.send(500, JSON.stringify(errorResponse));
-    }
-  });
+  serverUtils.getFeed();
+});
+
+app.post('/signin', (req, res) => {
+  const { author } = req.body;
+  res.status(200);
+  res.send({ author });
 });
 
 app.post('/message', (_req, res) => {

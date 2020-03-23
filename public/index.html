@@ -12,13 +12,14 @@
       <p><em>Add messages using the </em></p>
     </div>
     <!-- Tell the server your name -->
-    <div class="loginSection">
+    <div class="signInSection">
       <h3>Sign in</h3>
-      <form class="loginForm" action="/login" method="POST">
+      <form class="signInForm">
         <label for="author">I am:</label>
         <input type="text" name="author">
         <input type="submit" value="Sign in">
       </form>
+      <p class="authorHeader"></p>
     </div>
     <div class="formSection">
       <!-- Publish a message with tags -->
@@ -33,9 +34,9 @@
         </form>
       </div>
       <!-- Search terms to generate a message feed -->
-      <div class="feedSection" method="GET">
+      <div class="feedSection">
         <h3>View Feed</h3>
-        <form class="feedForm" action="/feed">
+        <form class="feedForm">
           <label for="tags">Terms</label>
           <input type="text" name="tags">
           <label for="relevance">Relevance</label>
