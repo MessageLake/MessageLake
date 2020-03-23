@@ -11,14 +11,16 @@ class DbConnection {
   }
 
   connect() {
-    this.connection = mysql.createConnection(connectionParams);
+    this.connection = mysql.createConnection(this.connectionParams);
   }
 
   query(sql) {
+    this.connect();
     this.connection.query(sql, (error, records, fields) => {
       if (error) throw error;
       console.log(`Record: ${records[0]}`);
     });
+    this.connection.end();
   }
 }
 
