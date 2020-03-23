@@ -1,0 +1,13 @@
+.homepage {
+  display: flex;
+}
+
+.publishSection {
+  border: 1px solid gray;
+  padding: 5px;
+}
+
+.feedSection {
+  border: 1px solid gray;
+  padding: 5px;
+}
