@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="styles.css" type="text/css" rel="stylesheet">
   <title>Lake</title>
 </head>
 <body>
   <div class="homepage">
     <!-- 1st form: publish a message with tags -->
     <div class="publishSection">
-      <form action="/message/publish">
+      <form action="/message/publish" method="POST">
         <input type="textarea" name="content">
         <input type="text" name="tags">
         <input type="submit" value="Publish">
       </form>
     </div>
     <!-- 2nd form: search and generate a feed -->
-    <div class="feedSection">
+    <div class="feedSection" method="POST">
       <form action="/feed/view">
         <input type="text" name="tags">
         <input type="submit" value="View">

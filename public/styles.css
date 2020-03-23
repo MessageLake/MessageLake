@@ -1,13 +1,16 @@
 .homepage {
   display: flex;
+  justify-content: space-around;
 }
 
 .publishSection {
   border: 1px solid gray;
   padding: 5px;
+  flex-grow: 1;
 }
 
 .feedSection {
   border: 1px solid gray;
   padding: 5px;
+  flex-grow: 2;
 }
