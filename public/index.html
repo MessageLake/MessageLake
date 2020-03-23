@@ -8,7 +8,12 @@
 </head>
 <body>
   <div class="homepage">
+    <div class="instructionSection">
+      <p><em>Add messages using the </em></p>
+    </div>
+    <!-- Tell the server your name -->
     <div class="loginSection">
+      <h3>Sign in</h3>
       <form class="loginForm" action="/login" method="POST">
         <label for="author">I am:</label>
         <input type="text" name="author">
@@ -16,21 +21,25 @@
       </form>
     </div>
     <div class="formSection">
-      <!-- 1st form: publish a message with tags -->
+      <!-- Publish a message with tags -->
       <div class="publishSection">
-      <form class="publishForm" action="/message" method="POST">
-          <label for="content">Content</label>
-          <input type="textarea" name="content">
-          <label for="tags">Tags</label>
-          <input type="text" name="tags">
-          <input type="submit" value="Publish">
+        <h3>Publish Message</h3>
+        <form class="publishForm" action="/message" method="POST">
+            <label for="content">Content</label>
+            <input type="textarea" name="content">
+            <label for="tags">Tags</label>
+            <input type="text" name="tags">
+            <input type="submit" value="Publish">
         </form>
       </div>
-      <!-- 2nd form: search and generate a feed -->
+      <!-- Search terms to generate a message feed -->
       <div class="feedSection" method="GET">
+        <h3>View Feed</h3>
         <form class="feedForm" action="/feed">
-          <label for="tags">Tags</label>
+          <label for="tags">Terms</label>
           <input type="text" name="tags">
+          <label for="relevance">Relevance</label>
+          <input type="number" value="5" min="0" max="10">
           <input type="submit" value="View">
         </form>
         <!-- Feed Area -->
