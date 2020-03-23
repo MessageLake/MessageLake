@@ -1,5 +1,5 @@
 # Overview
-Messaging via broadcast & tune-in. Wr
+Messaging via broadcast & tune-in. Add tagged messages to a central storage location, retrieve them by searching for tags. Catch related messages with word vectorization.
 
 ### Usage
 `npm run start`
