@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "createdAt": "21mar2020"
+  },
+  "messages": [
+    {
+      "author": "Jerry",
+      "content": "What is the deal with airlplane food?",
+      "tags": ["air", "travel", "joke"]
+    },
+    {
+      "author": "George",
+      "content": "These pretzels are making me thirsty.",
+      "tags": ["script", "line"]
+    },
+    {
+      "author": "Elaine",
+      "content": "Yada yada yada...",
+      "tags": ["silly", "line"]
+    },
+    {
+      "author": "Kramer",
+      "content": "Wide lanes, Jerry!",
+      "tags": ["adopt-a-highway", "idea"]
+    }
+  ]
+}

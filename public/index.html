@@ -17,12 +17,16 @@
       </form>
     </div>
     <!-- 2nd form: search and generate a feed -->
-    <div class="feedSection" method="POST">
-      <form action="/feed">
+    <div class="feedSection" method="GET">
+      <form class="feedForm" action="/feed">
         <input type="text" name="tags">
         <input type="submit" value="View">
       </form>
     </div>
+    <!-- Feed Area -->
+    <div class="feed"></div>
   </div>
+
+  <script src="index.js"></script>
 </body>
 </html>
