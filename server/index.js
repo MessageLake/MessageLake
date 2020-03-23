@@ -14,15 +14,12 @@ app.get('/', (req, res) => {
   res.redirect(301, '/home');
 });
 
-app.post('/message', (req, res) => {
-  console.log('Recieved a message');
-});
-
-app.get('/message', (req, res) => {
+app.get('/feed', (req, res) => {
   res.redirect(301, '/home');
 });
 
-app.get('/feed', (req, res) => {
+app.post('/message', (req, res) => {
+  console.log('Recieved a message');
   res.redirect(301, '/home');
 });
 
