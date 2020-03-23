@@ -4,9 +4,11 @@ class DbConnection {
   constructor() {
     this.connection = null;
     this.connectionParams = {
-      host: '127.0.0.1',
-      user: 'root',
-      database: 'messagelake'
+      host: process.env.DB_HOST,
+      port: 3306,
+      user: process.env.DB_USER,
+      password: process.env.MSPW,
+      database: process.env.DB_DATABASE
     };
   }
 
@@ -14,14 +16,14 @@ class DbConnection {
     this.connection = mysql.createConnection(this.connectionParams);
   }
 
-  query(sql) {
+  query(sql, params, callback) {
     this.connect();
-    this.connection.query(sql, (error, records, fields) => {
+    this.connection.query(sql, params, (error, records, fields) => {
       if (error) throw error;
-      console.log(`Record: ${records[0]}`);
+      callback();
     });
     this.connection.end();
   }
 }
 
-module.exports = DbConnection;
+module.exports = new DbConnection();
