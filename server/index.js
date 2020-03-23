@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 
-const serverUtils = require('./util');
 const model = require('../database/model');
 
 app.use(express.json());
