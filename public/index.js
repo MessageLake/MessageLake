@@ -4,15 +4,73 @@ const state = {
 
 const HOSTS = { dev: 'http://127.0.0.1:3000' };
 
-const feedForm = document.querySelector('.feedForm');
-const feedWrapper = document.querySelector(".feedWrapper");
+/// ### Sign In ### ///
 
-feedForm.addEventListener('submit', (event) => {
+const signInForm = document.querySelector('.signInForm');
+signInForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  getFeed(event);
+  const author = event.srcElement.elements[0].value;
+  signIn({ author });
 });
 
-function getFeed(event) {
+function signIn(author) {
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(author)
+  };
+
+  fetch(`${HOSTS.dev}/signin`, options)
+    .then(response => response.json())
+    .then((json) => {
+      state.author = json.author;
+      displayAuthorName();
+    })
+    .catch(error => console.error(error));
+}
+
+function displayAuthorName() {
+  const authorHeader = document.querySelector('.authorHeader');
+  authorHeader.innerText = `You are: ${state.author}`;
+}
+
+/// ### Publish Message ### ///
+
+const publishForm = document.querySelector('.publishForm');
+publishForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const message = event.srcElement.elements[0].value;
+  const rawTags = event.srcElement.elements[1].value;
+  const tags = rawTags.trim().split(/\s/);
+  publishMessage({ message, tags });
+});
+
+function publishMessage(message) {
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(message),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  fetch(`${HOSTS.dev}/message`, options)
+    .then()
+    .catch(error => console.error(error));
+}
+
+/// ### View Feed ### ///
+
+const feedForm = document.querySelector('.feedForm');
+feedForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const rawTerms = event.srcElement.elements[0].value;
+  const terms = rawTerms.trim().split(/\s/);
+  getFeed({ terms });
+});
+
+function getFeed(terms) {
+  const feedWrapper = document.querySelector(".feedWrapper");
+
   fetch(`${HOSTS.dev}/feed`)
     .then(response => response.json())
     .then(json => {
@@ -42,34 +100,4 @@ function newFeedItem(message) {
   wrapper.appendChild(author);
   wrapper.appendChild(content);
   return wrapper;
-}
-
-const signInForm = document.querySelector('.signInForm');
-signInForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  signIn(event);
-});
-
-function signIn(event) {
-  const body = { author: event.srcElement.elements[0].value };
-  const options = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  };
-
-  console.log(event);
-
-  fetch(`${HOSTS.dev}/signin`, options)
-    .then(response => response.json())
-    .then((json) => {
-      state.author = json.author;
-      displayAuthorName();
-    })
-    .catch(error => console.error(error));
-}
-
-function displayAuthorName() {
-  const authorHeader = document.querySelector('.authorHeader');
-  authorHeader.innerText = `You are: ${state.author}`;
 }
