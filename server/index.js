@@ -11,13 +11,13 @@ app.use('/', (req, _res, next) => {
   next();
 });
 
-app.use('/home', express.static('public'));
+app.use('/lake', express.static('public'));
 
-app.get('/', (req, res) => {
-  res.redirect(301, '/home');
+app.get('/', (_req, res) => {
+  res.redirect(301, '/lake');
 });
 
-app.get('/feed', (req, res) => {
+app.get('/feed', (_req, res) => {
   fs.readFile(sampleFeed, (err, data) => {
     if (!err) {
       res.send(data);
@@ -30,9 +30,9 @@ app.get('/feed', (req, res) => {
   });
 });
 
-app.post('/message', (req, res) => {
+app.post('/message', (_req, res) => {
   console.log('Recieved a message');
-  res.redirect(301, '/home');
+  res.redirect(301, '/lake');
 });
 
 app.listen(PORT, () => {
