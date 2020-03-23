@@ -10,7 +10,7 @@
   <div class="homepage">
     <!-- 1st form: publish a message with tags -->
     <div class="publishSection">
-      <form action="/message/publish" method="POST">
+      <form action="/message" method="POST">
         <input type="textarea" name="content">
         <input type="text" name="tags">
         <input type="submit" value="Publish">
@@ -18,7 +18,7 @@
     </div>
     <!-- 2nd form: search and generate a feed -->
     <div class="feedSection" method="POST">
-      <form action="/feed/view">
+      <form action="/feed">
         <input type="text" name="tags">
         <input type="submit" value="View">
       </form>
