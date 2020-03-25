@@ -7,6 +7,10 @@ Database / Models for persisted data
 Refactor to Promises or async/await
   Choose wisely
 
+1. Figure out your use-case flows
+2. Make the model methods more intelligent (findOrCreate...)
+3. Introduce a controller layer if deemed wise by (1)
+
 Do I want to return a message with all responses?
 Body:
   {
