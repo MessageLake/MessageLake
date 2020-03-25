@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const mysql = require('mysql');
 
 const db = require('./db');
 
@@ -7,11 +8,11 @@ const sampleFeed = path.resolve('./data/sampleFeed.json');
 
 const model = {
   findAuthor: (author, callback) => {
-    const sql = 'SELECT author FROM authors WHERE author = ?';
-    const params = [author];
-    db.query(sql, params, (error, results, _fields) => {
+    const sql = 'SELECT * FROM authors WHERE author = ?';
+    query = mysql.format(sql, [author]);
+    db.query(query, (error, results, fields) => {
       if (!error) {
-        callback(null, results);
+        callback(null, results, fields);
       } else {
         callback(error);
       }
@@ -19,11 +20,10 @@ const model = {
   },
   createAuthor: (author, callback) => {
     const sql = 'INSERT INTO authors (author) VALUES (?)';
-    const params = [author];
-    db.query(sql, params, (error, _results, _fields) => {
+    mysql.format(sql, [author]);
+    db.query(sql, params, (error, results, fields) => {
       if (!error) {
-        console.log('Successfully saved author');
-        callback();
+        callback(null, results);
       } else {
         callback(error);
       }

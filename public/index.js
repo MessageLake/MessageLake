@@ -23,8 +23,13 @@ function signIn(author) {
   fetch(`${HOSTS.dev}/signin`, options)
     .then(response => response.json())
     .then((json) => {
-      state.author = json.author;
-      displayAuthorName();
+      console.log(json);
+      if (json.errorMessage) {
+        console.error(errorMessage);
+      } else {
+        state.author = json.author;
+        displayAuthorName();
+      }
     })
     .catch(error => console.error(error));
 }
