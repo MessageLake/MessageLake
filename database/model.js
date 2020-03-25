@@ -12,15 +12,15 @@ const model = {
     const params = [message];
     db.query(sql, params, () => console.log('Successfully saved message'));
   },
-  getFeed: (terms, res) => {
+  getFeed: (terms, relevance, callback) => {
     fs.readFile(sampleFeed, (err, data) => {
       if (!err) {
-        res.send(data);
+        callback(null, data);
       } else {
         const errorResponse = {
           message: 'Sorry, there was an error fetching the resource at /feed'
         };
-        res.send(500, JSON.stringify(errorResponse));
+        callback(errorResponse);
       }
     });
   }

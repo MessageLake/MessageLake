@@ -21,8 +21,14 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/feed', (req, res) => {
-  const { terms } = req.body;
-  model.getFeed(terms, res);
+  const { terms, relevance } = req.body;
+  model.getFeed(terms, relevance, (err, feed) => {
+    if (!err) {
+      res.send(feed);
+    } else {
+      res.status(500).send(err);
+    }
+  });
 });
 
 app.post('/signin', (req, res) => {

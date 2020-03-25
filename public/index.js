@@ -65,13 +65,15 @@ feedForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const rawTerms = event.srcElement.elements[0].value;
   const terms = rawTerms.trim().split(/\s/);
-  getFeed({ terms });
+  const relevance = event.srcElement.elements[1].value;
+  getFeed(terms, relevance);
 });
 
-function getFeed(terms) {
+function getFeed(terms, relevance) {
   const feedWrapper = document.querySelector(".feedWrapper");
-
-  fetch(`${HOSTS.dev}/feed`)
+  url = new URL(`${HOSTS.dev}/feed`)
+  paramString = new URLSearchParams({ terms, relevance })
+  fetch(`${url}?${paramString}`)
     .then(response => response.json())
     .then(json => {
       const feed = document.createElement('div');
