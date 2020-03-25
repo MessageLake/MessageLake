@@ -33,14 +33,34 @@ app.get('/feed', (req, res) => {
 
 app.post('/signin', (req, res) => {
   const { author } = req.body;
-  res.status(200);
-  res.send({ author });
+  model.findAuthor(author, (error, foundAuthor) => {
+    if (!error) {
+      if (foundAuthor == null) {
+        model.createAuthor(author, (error, createdAuthor) => {
+          if (!error) {
+            res.send({ createdAuthor });
+          } else {
+            res.sendStatus(500);
+          }
+        });
+      } else {
+        res.send({ foundAuthor });
+      }
+    } else {
+      res.sendStatus(500);
+    }
+  });
 });
 
 app.post('/message', (req, res) => {
   const { message } = req.body;
-  model.saveMessage(message);
-  res.sendStatus(200);
+  model.saveMessage(message, (err) => {
+    if (!err) {
+      res.sendStatus(200);
+    } else {
+      res.sentStatus(500);
+    }
+  });
 });
 
 app.listen(PORT, () => {
