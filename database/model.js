@@ -4,13 +4,13 @@ const mysql = require('mysql');
 
 const db = require('./db');
 
-const queries = require('./queries');
+const { simpleQueries } = require('./queries');
 
 const sampleFeed = path.resolve('./data/sampleFeed.json');
 
 const model = {
   findAuthor: (author, callback) => {
-    const sql = 'SELECT * FROM authors WHERE author = ?';
+    const sql = simpleQueries.read.authorAllByName;
     query = mysql.format(sql, [author]);
     db.query(query, (error, results, fields) => {
       if (!error) {
@@ -21,7 +21,7 @@ const model = {
     });
   },
   createAuthor: (author, callback) => {
-    const sql = 'INSERT INTO authors (author) VALUES (?)';
+    const sql = simpleQueries.create.authorWithAll;
     mysql.format(sql, [author]);
     db.query(sql, params, (error, results, fields) => {
       if (!error) {
