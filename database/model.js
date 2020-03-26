@@ -11,7 +11,7 @@ const sampleFeed = path.resolve('./data/sampleFeed.json');
 const model = {
   findAuthor: (author, callback) => {
     const sql = simpleQueries.read.authorAllByName;
-    query = mysql.format(sql, [author]);
+    const query = mysql.format(sql, [author]);
     db.query(query, (error, results, fields) => {
       if (!error) {
         callback(null, results, fields);
@@ -22,8 +22,8 @@ const model = {
   },
   createAuthor: (author, callback) => {
     const sql = simpleQueries.create.authorWithAll;
-    mysql.format(sql, [author]);
-    db.query(sql, params, (error, results, fields) => {
+    const query = mysql.format(sql, [author]);
+    db.query(query, (error, results, fields) => {
       if (!error) {
         callback(null, results);
       } else {
