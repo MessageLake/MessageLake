@@ -52,9 +52,9 @@ const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0) => {
     db.query(query, (error, results, fields) => {
       if (!error) {
         if (results == null && fields == null) {
-          compoundExecutor(db, step.failure, null, depth);
+          return compoundExecutor(db, step.failure, null, depth);
         } else {
-          compoundExecutor(db, null, { results, fields }, depth + 1);
+          return compoundExecutor(db, null, { results, fields }, depth + 1);
         }
       } else {
         console.error(`Error while executing compound query. Query=${compoundQuery.name} Failed at depth=${depth}`);
