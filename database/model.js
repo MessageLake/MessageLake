@@ -4,7 +4,7 @@ const mysql = require('mysql');
 
 const db = require('./db');
 
-const { simpleQueries } = require('./queries');
+const { simpleQueries, compoundQueries, compoundExecutor } = require('./queries');
 
 const sampleFeed = path.resolve('./data/sampleFeed.json');
 
@@ -17,6 +17,18 @@ const model = {
         callback(null, results, fields);
       } else {
         callback(error);
+      }
+    });
+  },
+  findOrCreateAuthor: (author, callback) => {
+    const query = compoundQueries.findOrCreate.authorByName;
+    query.steps[0].parameters = [author];
+    query.steps[0].failure.steps[0].parameters = [author];
+    compoundExecutor(db, query, null, 0, (error, lastStepResults) => {
+      if (!error) {
+        console.log(`Successfully executed query ${query.name} with parameter ${author}, results=${JSON.stringify(lastStepResults)}`);
+      } else {
+        console.error(`Error while executing compound query. Step=${error.step} Failed at depth=${error.depth}. Error=${error.error}`)
       }
     });
   },

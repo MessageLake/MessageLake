@@ -2,11 +2,11 @@ const mysql = require('mysql');
 
 const simpleQueries = {
   read: {
-    authorIdByName: 'SELECT id FROM authors WHERE name = ?',
-    authorAllByName: 'SELECT * FROM authors WHERE name = ?',
+    authorIdByName: 'SELECT id FROM authors WHERE author = ?',
+    authorAllByName: 'SELECT * FROM authors WHERE author = ?',
     messageAllByAuthorId: 'SELECT messages.* FROM messages WHERE messages.author = ?',
-    messageAllByAuthorName: 'SELECT messages.* FROM messages JOIN authors ON messages.author = authors.id WHERE author.name = ?',
-    messageAndAuthorAllByAuthorName: 'SELECT * FROM messages JOIN authors ON messages.author = authors.id WHERE author.name = ?',
+    messageAllByAuthorName: 'SELECT messages.* FROM messages JOIN authors ON messages.author = authors.id WHERE authors.author = ?',
+    messageAndAuthorAllByAuthorName: 'SELECT * FROM messages JOIN authors ON messages.author = authors.id WHERE authors.author = ?',
     messagesAllByTag: 'SELECT messages.* FROM messages JOIN tags_on_messages ON messages.id = tags_on_messages.message JOIN tags ON tags.id = tags_on_messages.tag WHERE tags.tag = ?',
     tagAllByMessageId: 'SELECT tags.* FROM tags JOIN messages WHERE messages.id = ?'
   },
@@ -27,37 +27,41 @@ const simpleQueries = {
 
 const compoundQueries = {
   findOrCreate: {
-    authorByName: {
+    authorByName: { // the top-level does not take parameters
       name: 'authorByName',
       steps: [{
-          parameters: [],
-          query: simpleQueries.read.authorIdByName,
-          failure: {
-            parameters: [],
-            query: simpleQueries.create.authorWithAll
+          name: 'authorAllByName',
+          parameters: [], // set parameters outside the query
+          sql: simpleQueries.read.authorAllByName,
+          failure: { // failure options share the shape of steps
+            steps: [{
+              name: 'authorWithAll',
+              parameters: [],
+              sql: simpleQueries.create.authorWithAll
+              }]
           }
         }]
     }
   }
 };
 
-const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0) => {
+const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0, callback) => {
   // Try each step in the query. On success, try the next step. If it returns nothing, execute the step's failure option.
-  if (depth >= compoundQuery.steps) {
-    return lastStepResults;
+  if (depth >= compoundQuery.steps.length) {
+    callback(null, lastStepResults);
   } else {
-    const step = compoundQuery.steps[i];
-    const sql = step.query;
+    const step = compoundQuery.steps[depth];
+    const sql = step.sql;
     const query = mysql.format(sql, step.parameters);
     db.query(query, (error, results, fields) => {
       if (!error) {
-        if (results == null && fields == null) {
-          return compoundExecutor(db, step.failure, null, depth);
+        if (results.length == 0) { // is this / is there a reliable way to claim the query either A) did not find, or B) did not create, update, or delete?
+          compoundExecutor(db, step.failure, null, depth = 0, callback);
         } else {
-          return compoundExecutor(db, null, { results, fields }, depth + 1);
+          compoundExecutor(db, compoundQuery, { results, fields }, depth + 1, callback);
         }
       } else {
-        console.error(`Error while executing compound query. Query=${compoundQuery.name} Failed at depth=${depth}`);
+        callback({ error, depth, step: step.name });
       }
     });
   }
@@ -65,5 +69,6 @@ const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0) => {
 
 module.exports = {
   simpleQueries,
-  compoundQueries
+  compoundQueries,
+  compoundExecutor
 };
