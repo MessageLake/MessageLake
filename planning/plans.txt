@@ -1,11 +1,15 @@
 Next:
+Db Connection and functions async/await
+
 Write tests for server!
 
-Database / Models for persisted data
-  messages, authors, tags
-
-Refactor to Promises or async/await
-  Choose wisely
+Use relevance matrix locate related messages given terms
+  Nail down expectations with Travis.
+    It must be: ask ML for related messages given terms
+    Db won't be handling "findMessageByTags" in the end?
+      Do I retrieve my message objects from Travis? Or...
+        ML model has only the semantic info it needs about the message and can give me the ID of the relevant ones... which I can use to retrieve them from the database
+        ML model doing other fancy stuff like relevancy of tags is nice. But the core feature (related messages) will be tough enough.
 
 1. Figure out your use-case flows
 2. Make the model methods more intelligent (findOrCreate...)
@@ -20,8 +24,6 @@ Body:
       "author": "Friedrich Schiller"
     }
   }
-
-Use relevance matrix locate related messages given terms
 
 
 Later:
