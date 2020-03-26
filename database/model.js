@@ -4,6 +4,8 @@ const mysql = require('mysql');
 
 const db = require('./db');
 
+const queries = require('./queries');
+
 const sampleFeed = path.resolve('./data/sampleFeed.json');
 
 const model = {
