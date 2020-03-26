@@ -1,3 +1,5 @@
+const mysql = require('mysql');
+
 const simpleQueries = {
   read: {
     authorIdByName: 'SELECT id FROM authors WHERE name = ?',
@@ -25,12 +27,39 @@ const simpleQueries = {
 
 const compoundQueries = {
   findOrCreate: {
-   authorByName: {
+    authorByName: {
+      name: 'authorByName',
       steps: [{
+          parameters: [],
           query: simpleQueries.read.authorIdByName,
-          failure: simpleQueries.create.authorWithAll
+          failure: {
+            parameters: [],
+            query: simpleQueries.create.authorWithAll
+          }
         }]
     }
+  }
+};
+
+const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0) => {
+  // Try each step in the query. On success, try the next step. If it returns nothing, execute the step's failure option.
+  if (depth >= compoundQuery.steps) {
+    return lastStepResults;
+  } else {
+    const step = compoundQuery.steps[i];
+    const sql = step.query;
+    const query = mysql.format(sql, step.parameters);
+    db.query(query, (error, results, fields) => {
+      if (!error) {
+        if (results == null && fields == null) {
+          compoundExecutor(db, step.failure, null, depth);
+        } else {
+          compoundExecutor(db, null, { results, fields }, depth + 1);
+        }
+      } else {
+        console.error(`Error while executing compound query. Query=${compoundQuery.name} Failed at depth=${depth}`);
+      }
+    });
   }
 };
 
