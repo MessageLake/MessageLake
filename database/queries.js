@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const DbConnection = require('./db');
 
 const simpleQueries = {
   read: {
@@ -8,6 +9,7 @@ const simpleQueries = {
     messageAllByAuthorName: 'SELECT messages.* FROM messages JOIN authors ON messages.author = authors.id WHERE authors.author = ?',
     messageAndAuthorAllByAuthorName: 'SELECT * FROM messages JOIN authors ON messages.author = authors.id WHERE authors.author = ?',
     messagesAllByTag: 'SELECT messages.* FROM messages JOIN tags_on_messages ON messages.id = tags_on_messages.message JOIN tags ON tags.id = tags_on_messages.tag WHERE tags.tag = ?',
+    messagesAll: 'SELECT * FROM messages',
     tagAllByMessageId: 'SELECT tags.* FROM tags JOIN messages WHERE messages.id = ?'
   },
   create: {
@@ -45,6 +47,14 @@ const compoundQueries = {
   }
 };
 
+// could simple and compound be refactored into one method?
+const simpleExecutor = async (sql, params = []) => {
+  const db = new DbConnection();
+  const query = mysql.format(sql, params);
+  const result = await db.query(query);
+  return result;
+};
+
 const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0, callback) => {
   // Try each step in the query. On success, try the next step. If it returns nothing, execute the step's failure option.
   if (depth >= compoundQuery.steps.length) {
@@ -70,5 +80,6 @@ const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0, callbac
 module.exports = {
   simpleQueries,
   compoundQueries,
+  simpleExecutor,
   compoundExecutor
 };
