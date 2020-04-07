@@ -55,25 +55,24 @@ const simpleExecutor = async (sql, params = []) => {
   return result;
 };
 
-const compoundExecutor = (db, compoundQuery, lastStepResults, depth = 0, callback) => {
+const compoundExecutor = async (db, compoundQuery, lastStepResults, depth = 0) => {
   // Try each step in the query. On success, try the next step. If it returns nothing, execute the step's failure option.
   if (depth >= compoundQuery.steps.length) {
-    callback(null, lastStepResults);
+    return lastStepResults;
   } else {
     const step = compoundQuery.steps[depth];
     const sql = step.sql;
     const query = mysql.format(sql, step.parameters);
-    db.query(query, (error, results, fields) => {
-      if (!error) {
-        if (results.length == 0) { // is this / is there a reliable way to claim the query either A) did not find, or B) did not create, update, or delete?
-          compoundExecutor(db, step.failure, null, depth = 0, callback);
-        } else {
-          compoundExecutor(db, compoundQuery, { results, fields }, depth + 1, callback);
-        }
+    try {
+      const { results, fields } = await db.query(query);
+      if (results.length == 0) { // is this / is there a reliable way to claim the query either A) did not find, or B) did not create, update, or delete?
+        compoundExecutor(db, step.failure, null, depth = 0);
       } else {
-        callback({ error, depth, step: step.name });
+        compoundExecutor(db, compoundQuery, { results, fields }, depth + 1);
       }
-    });
+    } catch (error) {
+      return { error, depth, step: step.name };
+    }
   }
 };
 

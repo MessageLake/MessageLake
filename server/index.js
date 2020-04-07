@@ -31,15 +31,20 @@ app.get('/feed', async (req, res, next) => {
     res.status(200).send({ messages: records });
   } catch (error) {
     // this error is not always JSON, only SQL errors are
-    next(JSON.stringify(error));
+    return next(JSON.stringify(error));
   }
 });
 
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res, next) => {
   const { author } = req.body;
-  model.findOrCreateAuthor(author, (err, result) => {
-    // really just get these async before you do more of this please
-  });
+  res.set('Access-Control-Allow-Origin', '*');
+  try {
+    const result = await model.findOrCreateAuthor(author);
+    res.status(200).send({ authors: result.recorss });
+  } catch (error) {
+    console.log(JSON.stringify(error));
+    return next(JSON.stringify(error));
+  }
 });
 
 app.post('/message', async (req, res, next) => {

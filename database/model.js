@@ -6,20 +6,13 @@ const db = require('./db');
 
 const { simpleQueries, compoundQueries, simpleExecutor, compoundExecutor } = require('./queries');
 
-const sampleFeed = path.resolve('./data/sampleFeed.json');
-
 const model = {
-  findOrCreateAuthor: (author, callback) => {
+  findOrCreateAuthor: async (author) => {
     const query = compoundQueries.findOrCreate.authorByName;
     query.steps[0].parameters = [author];
     query.steps[0].failure.steps[0].parameters = [author];
-    compoundExecutor(db, query, null, 0, (error, lastStepResults) => {
-      if (!error) {
-        console.log(`Successfully executed query ${query.name} with parameter ${author}, results=${JSON.stringify(lastStepResults)}`);
-      } else {
-        console.error(`Error while executing compound query. Step=${error.step} Failed at depth=${error.depth}. Error=${error.error}`)
-      }
-    });
+    const result = await compoundExecutor(db, query, null, 0);
+    return result;
   },
   saveMessage: async (message) => {
     console.log(`Saving message: ${message}`);
