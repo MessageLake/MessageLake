@@ -3,27 +3,33 @@ const mysql = require('mysql');
 class DbConnection {
   constructor() {
     this.connection = null;
-    this.connectionParams = {
+    this.config = {
       host: process.env.DB_HOST,
       port: 3306,
       user: process.env.DB_USER,
       password: process.env.MSPW,
       database: process.env.DB_DATABASE
     };
+
   }
 
   connect() {
-    this.connection = mysql.createConnection(this.connectionParams);
+    this.connection = mysql.createConnection(this.config);
   }
 
-  query(sql, params, callback) {
-    this.connect();
-    this.connection.query(sql, params, (error, records, fields) => {
-      if (error) throw error;
-      callback();
+  query(sql, params) {
+    return new Promise((resolve, reject) => {
+      this.connect();
+      this.connection.query(sql, params, (error, records, fields) => {
+        if (error) {
+          reject({ error });
+        } else {
+          resolve({ records, fields });
+        }
+      });
+      this.connection.end();
     });
-    this.connection.end();
   }
 }
 
-module.exports = new DbConnection();
+module.exports = DbConnection;

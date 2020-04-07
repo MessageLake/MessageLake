@@ -1,7 +1,24 @@
 Next:
-Database / Models for persisted data
-  messages, authors, tags
+Db Connection and functions async/await
+
+Write tests for server!
+
 Use relevance matrix locate related messages given terms
+  See questions/outline for Travis at bottom
+
+1. Figure out your use-case flows
+2. Make the model methods more intelligent (findOrCreate...)
+3. Introduce a controller layer if deemed wise by (1)
+
+Do I want to return a message with all responses?
+Body:
+  {
+    "type": "Success",
+    "message": "Succesfully saved author to db",
+    "payload": {
+      "author": "Friedrich Schiller"
+    }
+  }
 
 
 Later:
@@ -24,3 +41,13 @@ Lake needs to use Auth as middleware in the same way that Auth uses ExpressOIDC.
   Simpler would be having Lake use Okta, but this is for learning
 
 
+Can the model do this:
+
+What are the inputs and outputs of the model?
+Input: Terms
+Output: Message IDs
+
+Can you have an ID on each [300] vector object in the model?
+When you return the (records? objects?) from the model, can they have the ID?
+Can they go in with the ID?
+  How do they go in after being written?
