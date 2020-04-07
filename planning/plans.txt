@@ -15,3 +15,12 @@ Tags carry more weight, but all message text is searchable
 
 Implemented:
 relevancy parameter in feed search (frontend)
+
+
+For Learning:
+Created auth server that connects with Okta
+Auth server uses Okta (via ExpressOIDC) to protect the service
+Lake needs to use Auth as middleware in the same way that Auth uses ExpressOIDC...
+  Simpler would be having Lake use Okta, but this is for learning
+
+
