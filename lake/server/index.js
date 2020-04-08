@@ -1,14 +1,34 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
+const { ExpressOIDC } = REQUIRE('@okta/oidc-middleware');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT;
 
 const model = require('../database/model');
 
+const oidc = new ExpressOIDC({
+  issuer: `${process.env.OKTA_DOMAIN}/oauth2/default`,
+  client_id: process.env.CLIENT_ID,
+  client_secret: process.env.CLIENT_SECRET,
+  // appBaseUrl: `${process.env.OKTA_DOMAIN}/authorization-code/callback`,
+  appBaseUrl: `http://messagelake:3000`,
+  scope: 'openid_profile',
+  testing: {
+    disableHttpsCheck: true
+  }
+});
+
 app.options('*', cors());
 
+app.use(session({
+  secret: process.env.CLIENT_SECRET,
+  resave: true,
+  saveUninitialized: false
+}));
+
+app.use(oidc.router);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -59,6 +79,14 @@ app.post('/message', async (req, res, next) => {
   }
 });
 
-app.listen(PORT, () => {
-  `MessageLake listening on port ${PORT}`;
+const startServer = () => {
+  app.listen(PORT, () => {
+    console.log(`MessageLake listening on port ${PORT}`);
+  });
+};
+
+oidc.on('ready', startServer);
+
+oidc.on('error', () => {
+  console.error(`Error configuring oidc middleware ${error}`);
 });
