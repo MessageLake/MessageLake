@@ -1,43 +1,75 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const { ExpressOIDC } = REQUIRE('@okta/oidc-middleware');
-const cors = require('cors');
+const mustacheExpress = require('mustache-express');
+const { ExpressOIDC } = require('@okta/oidc-middleware');
+
+const templateDir = path.join(__dirname, '..', 'views');
+const frontendDir = path.join(__dirname, '..', 'assets');
 
 const app = express();
 
+const config = require('../config');
 const model = require('../database/model');
 
-const oidc = new ExpressOIDC({
-  issuer: `${process.env.OKTA_DOMAIN}/oauth2/default`,
-  client_id: process.env.CLIENT_ID,
-  client_secret: process.env.CLIENT_SECRET,
-  // appBaseUrl: `${process.env.OKTA_DOMAIN}/authorization-code/callback`,
-  appBaseUrl: `http://messagelake:3000`,
-  scope: 'openid_profile',
-  testing: {
-    disableHttpsCheck: true
-  }
-});
+const oidc = new ExpressOIDC(config.oidc);
 
-app.options('*', cors());
+// const cors = require('cors');
+// app.options('*', cors());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-  secret: process.env.CLIENT_SECRET,
+  secret: 'this is another secret',
   resave: true,
   saveUninitialized: false
 }));
 
-app.use(oidc.router);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const displayConfig = Object.assign(
+  {},
+  config.oidc,
+  {
+    clientSecret: '****' + config.oidc.client_secret.substr(config.oidc.client_secret.length - 4, 4)
+  }
+);
 
-app.use('/', (req, _res, next) => {
-  console.debug(`url=${req.url}`);
-  next();
+app.locals.oidcConfig = displayConfig;
+
+app.use('/assets', express.static(frontendDir));
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', templateDir);
+
+app.use(oidc.router);
+
+// app.use('/', (req, _res, next) => {
+//   console.debug(`url=${req.url}`);
+//   console.log('User is authenticated? ' + req.userContext);
+//   next();
+// });
+
+app.get('/', (req, res) => {
+  const userinfo = req.userContext && req.userContext.userinfo;
+  res.render('home', {
+    isLoggedIn: !!userinfo,
+    userinfo: userinfo,
+  });
 });
 
-app.use(express.static('public'));
+app.get('/profile', oidc.ensureAuthenticated(), (req, res) => {
+  // Convert the userinfo object into an attribute array, for rendering with mustache
+  const userinfo = req.userContext && req.userContext.userinfo;
+  const attributes = Object.entries(userinfo);
+  res.render('profile', {
+    isLoggedIn: !!userinfo,
+    userinfo: userinfo,
+    attributes
+  });
+});
+
+// app.use('/', express.static('public'));
 
 app.get('/feed', async (req, res, next) => {
   // When you get messages, you need to get the author names and tags for each message
@@ -80,13 +112,13 @@ app.post('/message', async (req, res, next) => {
 });
 
 const startServer = () => {
-  app.listen(PORT, () => {
-    console.log(`MessageLake listening on port ${PORT}`);
+  app.listen(process.env.PORT, () => {
+    console.log(`MessageLake listening on port ${process.env.PORT}`);
   });
 };
 
 oidc.on('ready', startServer);
 
-oidc.on('error', () => {
+oidc.on('error', (error) => {
   console.error(`Error configuring oidc middleware ${error}`);
 });
